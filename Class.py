@@ -109,6 +109,7 @@ Three = Three()
 
 class static():
     """static"""
+    @staticmethod
     def s_test(a, b):
         print( a * b )
     def test( self, a, b ):
