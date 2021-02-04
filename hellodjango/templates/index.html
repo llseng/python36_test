@@ -1,0 +1,24 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: llseng
+ * @Date: 2021-01-26 17:21:46
+ * @LastEditors: llseng
+ * @LastEditTime: 2021-01-26 17:24:05
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Django</title>
+</head>
+<body>
+    <h2>今日水果推荐</h2>
+    <ul>
+        {% for fruit in fruits %}
+        <li>{{ fruit }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
