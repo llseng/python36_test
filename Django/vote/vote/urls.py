@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from polls.views import show_subjects, show_teachers, praise_or_criticize, login, logout, get_captcha, test
+from polls.views import show_subjects, show_teachers, praise_or_criticize, login, logout, get_captcha, test, export_teachers_excel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,6 @@ urlpatterns = [
     path( 'captcha/', get_captcha ),
 
     path( 'test/', test ),
+
+    path('excel/', export_teachers_excel),
 ]
