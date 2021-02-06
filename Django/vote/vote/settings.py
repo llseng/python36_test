@@ -130,3 +130,6 @@ USE_TZ = True
 
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, x) for x in ('static',) ]
 STATIC_URL = '/static/'
+
+# 配置会话的超时时间为1天（86400秒）
+SESSION_COOKIE_AGE = 86400
