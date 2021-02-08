@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from polls.models import Subject, Teacher, User
-from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.http import JsonResponse, HttpRequest, HttpResponse, Http404
 from polls.mappers import SubjectMapper
 from polls.serializers import SubjectSerializer, SubjectSimpleSerializer, TeacherSerializer
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from rest_framework.viewsets import ModelViewSet
 
 def subjects( request ):
     queryset = Subject.objects.all()
@@ -34,3 +36,23 @@ def show_teachers( request: HttpRequest ) -> HttpResponse:
         return Response( {'subject':subject_seri.data, 'teachers': teacher_seri.data} )
     except (TypeError, ValueError, Subject.DoesNotExist ):
         return Response( status=404 )
+
+class SubjectView( ListAPIView ):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+class SubjectViewSet( ModelViewSet ):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+class TeacherView( ListAPIView ):
+    serializer_class = TeacherSerializer
+
+    def get_queryset(self):
+        queryset = Teacher.objects.defer( 'sno' )
+        try:
+            sno = self.request.GET.get( 'sno', '' )
+            queryset = queryset.filter( sno__no=sno )
+            return queryset
+        except ValueError:
+            raise Http404( "No teachers found." )
