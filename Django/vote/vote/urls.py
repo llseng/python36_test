@@ -35,4 +35,6 @@ urlpatterns = [
     path('excel/', export_teachers_excel),
 
     path( 'api/subjects/', polls_apis.subjects ),
+    path( 'api/show_subjects/', polls_apis.show_subjects ),
+    path( 'api/show_teachers/', polls_apis.show_teachers ),
 ]

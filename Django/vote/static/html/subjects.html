@@ -31,7 +31,8 @@
                 subjects: []
             },
             created() {
-                fetch('/api/subjects/')
+                // fetch('/api/subjects/')
+                fetch('/api/show_subjects/')
                     .then(resp => resp.json())
                     .then(json => {
                         this.subjects = json

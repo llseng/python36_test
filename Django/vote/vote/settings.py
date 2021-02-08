@@ -38,7 +38,36 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls',
+    'rest_framework',
 ]
+
+# 下面的配置根据项目需要进行设置
+REST_FRAMEWORK = {
+    # 配置默认页面大小
+    # 'PAGE_SIZE': 10,
+    # 配置默认的分页类
+    # 'DEFAULT_PAGINATION_CLASS': '...',
+    # 配置异常处理器
+    # 'EXCEPTION_HANDLER': '...',
+    # 配置默认解析器
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'rest_framework.parsers.JSONParser',
+    #     'rest_framework.parsers.FormParser',
+    #     'rest_framework.parsers.MultiPartParser',
+    # ),
+    # 配置默认限流类
+    # 'DEFAULT_THROTTLE_CLASSES': (
+    #     '...'
+    # ),
+    # 配置默认授权类
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     '...',
+    # ),
+    # 配置默认认证类
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     '...',
+    # ),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
