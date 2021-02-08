@@ -12,6 +12,19 @@ def show_subjects( request ):
     subjects = Subject.objects.all().order_by('no')
     return render( request, 'subjects.html', {'subjects': subjects} )
 
+def json_subjects( request ):
+    queryset = Subject.objects.all()
+    subjects = []
+    for x in queryset:
+        subjects.append({
+            'no': x.no,
+            'name': x.name,
+            'intro': x.intro,
+            'isHot': x.is_hot
+        })
+    
+    return JsonResponse( subjects, safe=False )
+
 def show_teachers( request ):
     try:
         # if not request.session.get('userid', None):
