@@ -227,3 +227,25 @@ LOGGING = {
         },
     }
 }
+
+CACHES = {
+    'default': {
+        # 指定通过 django-redis接入redis服务
+        'BACKEND': 'django_redis.cache.RedisCache',
+        #redis 服务器的URL 
+        'LOCATION': ['redis://127.0.0.1:6379/0'],
+        #Redis中键的前缀(解决命名冲突)
+        'KEY_PREFIX': 'vote',
+        #其他的配置选项
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            #连接池(预置若干备用的redis连接)参数
+            'CONNECTION_POOL_KWARGS': {
+                #最大连接数
+                'max_connections': 512,
+            },
+            #连接redis的用户口令
+            'PASSWORD': '',
+        }
+    }
+}

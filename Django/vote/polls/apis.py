@@ -4,20 +4,42 @@ from django.http import JsonResponse, HttpRequest, HttpResponse, Http404
 from polls.mappers import SubjectMapper
 from polls.serializers import SubjectSerializer, SubjectSimpleSerializer, TeacherSerializer
 
+import json, time
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django_redis import get_redis_connection
+
 def subjects( request ):
-    queryset = Subject.objects.all()
-    subjects = []
-    for x in queryset:
-        subjects.append( SubjectMapper(x).as_dict() )
+    redis_cli = get_redis_connection()
+    cache_key = 'vote:polls:subjects'
+    data = redis_cli.get( cache_key )
     
-    return JsonResponse( subjects, safe=False )
+    while not data: 
+        if redis_cli.setnx( 'mutex', 'x', ex=10 ):
+
+            queryset = Subject.objects.all()
+            subjects = []
+            for x in queryset:
+                subjects.append( SubjectMapper(x).as_dict() )
+            data = json.dumps( subjects )
+            redis_cli.set( cache_key,  data, ex=60 )
+
+            redis_cli.delete( 'mutex' )
+        else:
+            time.sleep( 0.1 )
+            data = redis_cli.get( cache_key )
+
+    res = json.loads( data )
+    
+    return JsonResponse( res, safe=False )
 
 @api_view( ('GET',) )
+@cache_page( timeout= 60, cache= 'default' )
 def show_subjects( request: HttpRequest ) -> HttpResponse:
     subjects = Subject.objects.all().order_by( 'no' )
     # 创建序列化器对象并指定要序列化的模型
@@ -26,6 +48,7 @@ def show_subjects( request: HttpRequest ) -> HttpResponse:
     return Response( serializer.data )
 
 @api_view( ('GET', ) )
+@cache_page( timeout= 60, cache= 'default' )
 def show_teachers( request: HttpRequest ) -> HttpResponse:
     try:
         sno = int( request.GET.get( 'sno' ) )
@@ -37,6 +60,7 @@ def show_teachers( request: HttpRequest ) -> HttpResponse:
     except (TypeError, ValueError, Subject.DoesNotExist ):
         return Response( status=404 )
 
+@method_decorator(decorator=cache_page(timeout=60, cache='default'), name='get' )
 class SubjectView( ListAPIView ):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
@@ -45,6 +69,7 @@ class SubjectViewSet( ModelViewSet ):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
 
+@method_decorator(decorator=cache_page(timeout=60, cache='default'), name='get' )
 class TeacherView( ListAPIView ):
     serializer_class = TeacherSerializer
 
