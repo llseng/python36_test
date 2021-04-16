@@ -71,15 +71,38 @@ class RedShapeDecorator( ShapeDecorator ):
         super().__init__(shape)
     
     def drow(self):
+        print( "red", end=' ' )
         super().drow()
-        print( "red", self._shape )
+
+class GreenShapeDecorator( ShapeDecorator ):
+    """
+    红色装饰器
+    """
+    def __init__(self, shape):
+        super().__init__(shape)
+    
+    def drow(self):
+        print( "green", end=' ' )
+        super().drow()
 
 if __name__ == "__main__":
-    
-    redCircleShape = RedShapeDecorator( CircleShape() )
-    redTriangleShape = RedShapeDecorator( TriangleShape() )
-    redRectangleShape = RedShapeDecorator( RectangleShape() )
+
+    circle = CircleShape()
+    triangle = TriangleShape()
+    recursion = RectangleShape()
+
+    redCircleShape = RedShapeDecorator( circle )
+    redTriangleShape = RedShapeDecorator( triangle )
+    redRectangleShape = RedShapeDecorator( recursion )
+
+    greenCircleShape = GreenShapeDecorator( circle )
+    greenTriangleShape = GreenShapeDecorator( triangle )
+    greenRectangleShape = GreenShapeDecorator( recursion )
 
     redCircleShape.drow()
     redTriangleShape.drow()
     redRectangleShape.drow()
+
+    greenCircleShape.drow()
+    greenTriangleShape.drow()
+    greenRectangleShape.drow()
